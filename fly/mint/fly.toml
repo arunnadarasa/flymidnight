@@ -1,0 +1,30 @@
+app        = "choreo-mint"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV          = "production"
+  NETWORK_ID        = "undeployed"
+  INDEXER_URL       = "http://choreo-indexer.internal:8088/api/v4/graphql"
+  INDEXER_WS_URL    = "ws://choreo-indexer.internal:8088/api/v4/graphql/ws"
+  NODE_WS           = "ws://choreo-node.internal:9944"
+  # Proof server is IPv4-only (stock image). Fly 6PN is IPv6, so
+  # choreo-proof.internal:6300 fails with "Unable to connect". Use the
+  # public edge URL — same pattern as the browser prove path.
+  PROOF_SERVER_URL  = "https://choreo-proof.fly.dev"
+
+[http_service]
+  internal_port       = 8080
+  force_https         = true
+  # Wallet keeps sync state; suspending forces a cold re-sync on the next request.
+  auto_stop_machines  = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes           = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus     = 2
+  memory   = "2gb"

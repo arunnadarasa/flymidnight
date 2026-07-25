@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../../",
+  "sources": ["contracts/TokenizedChoreoKits.compact", "compiler/standard-library.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAeA;;;;;;;;;;;;;MAKA,AAAA,gBAIC;;OAAA;MAID,AAAA,UAMC;;;;;cANyB,SAAyB;;;;;;;;;;;yCAAzB,SAAyB;;;;;;;uEAAzB,SAAyB;;;OAMlD;;;;GAjBA;EAFD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAPA;;;;;;;;;yEAAiC;IACjC;;;;;;;;;yEAAyC;IACzC;;;;;;;;;yEAAgD;UAM9C,KAAS;IAAT;;;;;;;;;;6FAAA,KAAS;;;;wEAAA;;;;;;;GACV;ECjBD,AAAA,kBAAA;oEAAA;;;EDaA,AAAA,iBAAoC;;0DAApC,cAAoC;;;;;;;;;;;;;;GAAA;EAOpC,AAAA,mBAIC,CAJ+B,IAAa,EAAE,KAAc;;mCAEd,KAAG;mCAAE,IAAE;GAErD;EAID,AAAA,aAMC,4BANyB,SAAyB;UAC3C,IAAqB;UACrB,KAAqC;+EAA/B;;;;;;;;;;;oJAAS;;UACrB,KAAsB,4BAA6B,IAAE,EAAE,KAAG;IAA1D;;;;;;;2HAAA,KAAsB;;yEAAA;IACtB;;;;;;;2HAAoB,SAAO;;yEAAnB;UACR,KAAS;IAAT;;;;;;;;;;6FAAA,KAAS;;;;wEAAA;;GACV;;;;;;;;;;;;;;;;IA1BD;qCAAA;;;;;;;;;;;0GAAiC;KAAA;IACjC;qCAAA;;;;;;;;;;;0GAAyC;KAAA;IACzC;qCAAA;;;;;;;;;;;0GAAgD;KAAA;;;;;;;;EAUhD,AAAA,gBAIC;;;;UAJ+B,IAAa;UAAE,KAAc;;;;;;;;;;;;;;;8CAA7B,IAAa,EAAE,KAAc;GAI5D;;;;"
+}

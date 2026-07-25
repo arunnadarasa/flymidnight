@@ -1,0 +1,10 @@
+# Ephemeral build config for scripts/fly-deploy-contract.sh.
+# Lives at repo root so the build context is the repo (Dockerfile pulls in
+# scripts/, contracts/, package.json). We reuse the choreo-node app name so
+# the image lands in that app's registry and one-shot machines can join
+# choreo-node's 6PN network.
+app        = "choreo-node"
+primary_region = "iad"
+
+[build]
+  dockerfile = "fly/deploy/Dockerfile"

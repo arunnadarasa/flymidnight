@@ -1,0 +1,38 @@
+# Midnight proof-server (public — browser posts prove requests here).
+#
+# RAM note: cold-load of the k=13 proving key needs ~1.5 GB; a 1 GB machine
+# OOMs mid-mint. Do not shrink `memory` below 2gb.
+#
+# Deploy: FLY_ACCESS_TOKEN=... flyctl deploy -c fly/proof/fly.toml --remote-only
+
+app        = "choreo-proof"
+primary_region = "iad"
+
+# The proof server is only accessed via the public fly-proxy URL
+# (https://choreo-proof.fly.dev) which enters the machine over IPv4 — no
+# .internal 6PN traffic hits it — so the stock IPv4-only binary is fine and
+# no socat proxy is needed.
+[build]
+  image = "midnightntwrk/proof-server:8.0.3"
+
+[processes]
+  app = "midnight-proof-server -v"
+
+[http_service]
+  internal_port       = 6300
+  force_https         = true
+  # Never auto-stop — cold start = 4 min of user-visible "Proving…".
+  auto_stop_machines  = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes           = ["app"]
+
+  [http_service.concurrency]
+    type       = "requests"
+    hard_limit = 4
+    soft_limit = 2
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus     = 2
+  memory   = "2gb"

@@ -1,0 +1,42 @@
+# Midnight tDUST faucet — small Node.js service that holds FAUCET_SEED and
+# sends tDUST to any address on request. Runs on Fly (not Cloudflare Workers)
+# because @midnight-ntwrk/wallet doesn't run in workerd.
+#
+# Set FAUCET_SEED before first deploy:
+#   flyctl secrets set FAUCET_SEED=<64-hex> -c fly/faucet/fly.toml
+#
+# Deploy: FLY_ACCESS_TOKEN=... flyctl deploy -c fly/faucet/fly.toml --remote-only
+
+app        = "choreo-faucet"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV          = "production"
+  # Use the internal 6PN URL for the indexer. The indexer-standalone v4.0.2
+  # image exposes GraphQL on /api/v4/graphql; /api/v1/graphql 308-redirects.
+  INDEXER_URL       = "http://choreo-indexer.internal:8088/api/v4/graphql"
+  INDEXER_WS_URL    = "ws://choreo-indexer.internal:8088/api/v4/graphql/ws"
+  # Proof server is kept public; the custom image also proxies 6PN traffic.
+  PROOF_SERVER_URL  = "https://choreo-proof.fly.dev"
+  NODE_WS           = "ws://choreo-node.internal:9944"
+  NETWORK_ID        = "undeployed"
+  DUST_PER_REQUEST  = "50000000"   # 50 tDUST (6 decimals)
+  MAX_PER_HOUR      = "3"          # per address
+
+[http_service]
+  internal_port       = 8787
+  force_https         = true
+  # The faucet keeps a wallet open; suspending it loses sync state and makes
+  # the first visitor wait ~90s for the wallet to re-open.
+  auto_stop_machines  = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes           = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus     = 1
+  memory   = "1gb"

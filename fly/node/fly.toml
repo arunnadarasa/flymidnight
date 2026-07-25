@@ -1,0 +1,52 @@
+# Midnight standalone node on Fly.io.
+#
+# INVARIANTS (do not violate):
+#   * Exactly one machine (`flyctl scale count 1`). Two = two participants.
+#   * Never auto-stop: this is stateful chain data.
+#   * NO [http_service]. Node RPC (ws://:9944) is 6PN-internal only. The
+#     indexer and any deploy script must reach it via
+#     `ws://choreo-node.internal:9944`.
+#   * If the /data volume is destroyed, every previously-deployed contract
+#     address becomes invalid.
+#
+# Deploy: FLY_ACCESS_TOKEN=... flyctl deploy -c fly/node/fly.toml --remote-only
+
+app        = "choreo-node"
+primary_region = "iad"
+
+# Bind the RPC/WebSocket server to IPv6 as well so apps on the same 6PN
+# network (indexer, proof server, faucet) can reach it via
+# choreo-node.internal:9944. The default preset only listens on IPv4.
+[processes]
+# --alice = shortcut for --name Alice --validator (adds Alice session keys to the
+# in-memory keystore). --force-authoring lets the node seal blocks alone even
+# with 0 peers. Without these the node boots as Role: FULL and sits at #0.
+app = "--alice --force-authoring --experimental-rpc-endpoint \"listen-addr=[::]:9944,methods=unsafe\""
+
+[build]
+  image = "midnightntwrk/midnight-node:0.22.5"
+
+[env]
+  CFG_PRESET                    = "dev"
+  SIDECHAIN_BLOCK_BENEFICIARY   = "04bcf7ad3be7a5c790460be82a713af570f22e0f801f6659ab8e84a52be6969e"
+
+[mounts]
+  source      = "chain_data"
+  destination = "/node/chain"
+
+# Expose 9944 to the private 6PN network only (no public [http_service]).
+[[services]]
+  internal_port = 9944
+  protocol      = "tcp"
+  auto_stop_machines  = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes           = ["app"]
+
+  [[services.ports]]
+    port = 9944
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus     = 1
+  memory   = "1gb"
