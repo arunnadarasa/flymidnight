@@ -224,7 +224,7 @@ VITE_DEFAULT_CONTRACT=  # paste hex address after deploy
 - No AI Gateway calls.
 - No transfer/resale logic yet — v1 is the license record. Marketplace tx flow
   is a natural v2 using the same contract shape.
-- No tests, no CI. Ship the demo.
+- No CI. Offline Compact simulator coverage lives in `contracts/tokenized-choreo-kits.test.ts` (`bun test`).
 
 ## Credits
 
